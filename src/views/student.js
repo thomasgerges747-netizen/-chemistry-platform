@@ -220,8 +220,8 @@ export function renderStudent(root, { state, navigate }) {
           <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start">
             <div style="min-width:0">
               <h4 style="font-size:15px">${esc(h.title)}</h4>
-              <p style="font-size:12.5px;color:var(--txt-dim);line-height:1.9;margin-top:6px">${esc(h.description)}</p>
-              <div class="row-item__sub" style="margin-top:8px">الوحدة: ${esc(h.unit || '—')} • الدرجة القصوى: ${AR(h.maxScore)} • آخر موعد: ${h.due ? formatDate(h.due) : '—'}</div>
+              <p style="font-size:12.5px;color:var(--txt-dim);line-height:1.9;margin-top:6px">${esc(h.body || '')}</p>
+              <div class="row-item__sub" style="margin-top:8px">المجموعة: ${esc(h.group || 'الكل')} • الدرجة القصوى: ${AR(h.maxScore)} • آخر موعد: ${h.dueDate ? formatDate(h.dueDate) : '—'}</div>
             </div>
             <div>${badge(label, tone)}</div>
           </div>
