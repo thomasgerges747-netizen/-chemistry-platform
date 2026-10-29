@@ -1,0 +1,22 @@
+{
+  "name": "chemistry-platform",
+  "private": true,
+  "version": "2.0.0",
+  "type": "module",
+  "description": "منصة الكيمياء التفاعلية - د. محمود النجار",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "node server/index.js",
+    "test": "node scripts/smoke.mjs"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "jsqr": "^1.4.0",
+    "qrcode": "^1.5.3"
+  },
+  "devDependencies": {
+    "vite": "^5.4.0"
+  }
+}
