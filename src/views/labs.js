@@ -21,11 +21,8 @@ export function periodicTable(root, { onCard } = {}) {
     </div>
     <div id="pt-legend" class="legend"></div>
     <div class="card card--pad" style="margin-top:12px">
-      <div class="pt-wrap"><div class="periodic" id="pt-grid"></div>div>
+      <div class="pt-wrap"><div class="periodic" id="pt-grid"></div></div>
     </div>`;
-
-  // إصلاح سريع لعلامة الإغلاق (يضمن صحّة البنية)
-  root.querySelector('.pt-wrap').innerHTML = '<div class="periodic" id="pt-grid"></div>';
 
   const grid = root.querySelector('#pt-grid');
   const legend = root.querySelector('#pt-legend');
