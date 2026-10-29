@@ -806,7 +806,7 @@ app.get('/api/admin/admins', requireAuth, requireRole('admin'), (req, res) => {
 });
 
 app.post('/api/admin/admins', requireAuth, requireRole('admin'), requireCsrf, (req, res) => {
-  if (req.user.role !== 'admin' || req.user.title !== 'المشرف العام') {
+  if (req.user.role !== 'owner') {
     return res.status(403).json({ error: 'إضافة المشرفين متاحة للمشرف العام فقط' });
   }
   const username = str(req.body?.username, 30).toLowerCase();
@@ -840,23 +840,25 @@ app.post('/api/admin/admins', requireAuth, requireRole('admin'), requireCsrf, (r
 });
 
 app.patch('/api/admin/admins/:id', requireAuth, requireRole('admin'), requireCsrf, (req, res) => {
-  if (req.user.title !== 'المشرف العام') return res.status(403).json({ error: 'التعديل متاح للمشرف العام فقط' });
+  if (req.user.role !== 'owner') return res.status(403).json({ error: 'التعديل متاح للمشرف العام فقط' });
   const db = load();
   const target = db.admins.find((a) => a.id === req.params.id);
   if (!target) return res.status(404).json({ error: 'المشرف غير موجود' });
+  if (typeof req.body?.active === 'boolean' && target.role === 'owner' && !req.body.active) {
+    return res.status(400).json({ error: 'لا يمكن إيقاف حساب المشرف العام' });
+  }
+  if (typeof req.body?.password === 'string' && req.body.password) {
+    const problem = passwordProblem(req.body.password);
+    if (problem) return res.status(400).json({ error: problem });
+  }
   const result = mutate((d) => {
     const admin = d.admins.find((a) => a.id === req.params.id);
     if (typeof req.body?.name === 'string' && str(req.body.name, 60).length >= 3) admin.name = str(req.body.name, 60);
-    if (typeof req.body?.active === 'boolean') {
-      if (admin.role === 'owner' && !req.body.active) throw new Error('لا يمكن إيقاف حساب المشرف العام');
-      admin.active = req.body.active;
-    }
+    if (typeof req.body?.active === 'boolean') admin.active = req.body.active;
     if (typeof req.body?.password === 'string' && req.body.password) {
-      const problem = passwordProblem(req.body.password);
-      if (problem) throw new Error(problem);
       Object.assign(admin, hashPassword(req.body.password));
     }
-    audit(d, req.user.name, 'تعديل مشرف', admin.name再加上 || admin.name, clientIp(req));
+    audit(d, req.user.name, 'تعديل مشرف', admin.name, clientIp(req));
     return publicAdmin(admin);
   });
   return res.json(result);
