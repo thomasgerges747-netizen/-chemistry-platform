@@ -1022,4 +1022,6 @@ export function start(port = PORT) {
   return server;
 }
 
-if (process.env.NODE_ENV !== 'test') start();
+const invokedDirectly =
+  process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+if (invokedDirectly || process.env.CHEM_FORCE_START === '1') start();
